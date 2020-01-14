@@ -1,5 +1,6 @@
 const createError = require('http-errors');
 const express = require('express');
+const engine = require('ejs-locals');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -11,6 +12,7 @@ const usersRouter = require('./routes/users');
 const app = express();
 
 // view engine setup
+app.engine('ejs', engine);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
