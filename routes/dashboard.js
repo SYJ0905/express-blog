@@ -17,13 +17,21 @@ router.get('/article', (req, res) => {
 
 /* GET dashboard/categories page. */
 router.get('/categories', (req, res) => {
+  const message = req.flash('info');
   categoriesRef.once('value')
     .then((dataSnapshot) => {
+      console.log('取得文章分類成功');
       const categories = dataSnapshot.val();
       res.render('dashboard/categories', {
         title: 'Express',
         categories,
+        message,
+        hasInfo: message.length > 0,
       });
+    })
+    .catch((error) => {
+      console.log('取得文章分類失敗', error.message);
+      res.redirect('/dashboard/categories');
     });
 });
 
@@ -38,6 +46,11 @@ router.post('/categories/create', (req, res) => {
   };
   categoryRef.set(data)
     .then(() => {
+      console.log('新增文章分類成功');
+      res.redirect('/dashboard/categories');
+    })
+    .catch((error) => {
+      console.log('新增文章分類失敗', error.message);
       res.redirect('/dashboard/categories');
     });
 });
@@ -45,8 +58,16 @@ router.post('/categories/create', (req, res) => {
 // 刪除文章分類 API
 router.post('/categories/delete/:id', (req, res) => {
   const id = req.params.id;
-  categoriesRef.child(id).remove();
-  res.redirect('/dashboard/categories');
+  categoriesRef.child(id).remove()
+    .then(() => {
+      console.log('刪除文章分類成功');
+      req.flash('info', '欄位已刪除');
+      res.redirect('/dashboard/categories');
+    })
+    .catch((error) => {
+      console.log('刪除文章分類失敗', error.message);
+      res.redirect('/dashboard/categories');
+    });
 });
 
 module.exports = router;
