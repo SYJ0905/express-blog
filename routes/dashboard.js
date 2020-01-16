@@ -44,14 +44,22 @@ router.post('/categories/create', (req, res) => {
     path: req.body.path,
     id: key,
   };
-  categoryRef.set(data)
-    .then(() => {
-      console.log('新增文章分類成功');
-      res.redirect('/dashboard/categories');
-    })
-    .catch((error) => {
-      console.log('新增文章分類失敗', error.message);
-      res.redirect('/dashboard/categories');
+  categoriesRef.orderByChild('path').equalTo(data.path).once('value')
+    .then((dataSnapshot) => {
+      if (dataSnapshot.val() !== null) {
+        req.flash('info', '已有相同路徑');
+        res.redirect('/dashboard/categories');
+      } else {
+        categoryRef.set(data)
+          .then(() => {
+            console.log('新增文章分類成功');
+            res.redirect('/dashboard/categories');
+          })
+          .catch((error) => {
+            console.log('新增文章分類失敗', error.message);
+            res.redirect('/dashboard/categories');
+          });
+      }
     });
 });
 
