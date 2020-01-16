@@ -27,6 +27,7 @@ router.get('/categories', (req, res) => {
     });
 });
 
+// 新增文章分類 API
 router.post('/categories/create', (req, res) => {
   const categoryRef = categoriesRef.push();
   const key = categoryRef.key;
@@ -39,6 +40,13 @@ router.post('/categories/create', (req, res) => {
     .then(() => {
       res.redirect('/dashboard/categories');
     });
+});
+
+// 刪除文章分類 API
+router.post('/categories/delete/:id', (req, res) => {
+  const id = req.params.id;
+  categoriesRef.child(id).remove();
+  res.redirect('/dashboard/categories');
 });
 
 module.exports = router;
