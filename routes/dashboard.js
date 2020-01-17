@@ -1,4 +1,5 @@
 const express = require('express');
+const moment = require('moment');
 const firebaseAdmin = require('../plugins/firebase-admin');
 
 const router = express.Router();
@@ -8,7 +9,30 @@ const articlesRef = firebaseAdmin.ref('/articles/');
 
 /* GET dashboard/archives page. */
 router.get('/archives', (req, res) => {
-  res.render('dashboard/archives', { title: 'Express' });
+  const categories = [];
+  categoriesRef.once('value')
+    .then((dataSnapshot) => {
+      dataSnapshot.forEach((dataSnapshotChild) => {
+        categories.push(dataSnapshotChild.val());
+      });
+      return articlesRef.orderByChild('update_time').once('value');
+    })
+    .then((dataSnapshot) => {
+      const articles = [];
+      dataSnapshot.forEach((dataSnapshotChild) => {
+        articles.push(dataSnapshotChild.val());
+      });
+      res.render('dashboard/archives', {
+        title: 'Express',
+        categories,
+        articles,
+        moment,
+      });
+    })
+    .catch((error) => {
+      console.log('渲染文章頁面失敗', error.message);
+      res.redirect('/');
+    });
 });
 
 /* GET /article/create 新增文章頁面 */
