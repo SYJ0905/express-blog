@@ -121,6 +121,19 @@ router.post('/article/update/:id', (req, res) => {
     });
 });
 
+/* POST API /article/delete/:id 刪除文章分類 */
+router.post('/article/delete/:id', (req, res) => {
+  const id = req.params.id;
+  articlesRef.child(id).remove()
+    .then(() => {
+      res.send('文章已刪除');
+      res.end();
+    })
+    .catch((error) => {
+      console.log('刪除文章失敗', error.message);
+    });
+});
+
 /* GET /dashboard/categories 文章分類頁面 */
 router.get('/categories', (req, res) => {
   const message = req.flash('info');

@@ -17,5 +17,6 @@ module.exports = {
     'import/no-unresolved': 'off',
     'no-console': 'off',
     'prefer-destructuring': 'off',
+    'no-alert': 'off',
   },
 };
