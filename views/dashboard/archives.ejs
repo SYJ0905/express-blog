@@ -3,9 +3,9 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <div class="btn-group w-100">
-          <a href="#" class="btn btn-outline-secondary w-100 rounded-0 active">已發佈</a>
-          <a href="#" class="btn btn-outline-secondary w-100 rounded-0 ">草稿</a>
-          <a href="article.html" class="btn btn-primary">新增文章</a>
+          <a href="/dashboard/archives?status=public" class="btn btn-outline-secondary w-100 rounded-0 <% if (articleStatus === 'public') { %>active<% } %>">已發佈</a>
+          <a href="/dashboard/archives?status=draft" class="btn btn-outline-secondary w-100 rounded-0 <% if (articleStatus === 'draft') { %>active<% } %>">草稿</a>
+          <a href="/dashboard/article/create" class="btn btn-primary">新增文章</a>
         </div>
 
         <% articles.forEach(function(item) { %>
@@ -32,7 +32,7 @@
             <div class="card-footer p-0 btn-group">
               <a href="#" class="btn btn-outline-danger rounded-0 deletePost" data-id="<%= item.id %>"
                 data-title="<%= item.title %>">刪除</a>
-              <a href="#" class="btn btn-outline-secondary w-100 rounded-0">編輯</a>
+              <a href="/dashboard/article/<%= item.id %>" class="btn btn-outline-secondary w-100 rounded-0">編輯</a>
 
               <a href="#" target="_blank" class="btn btn-outline-secondary w-100 rounded-0">預覽</a>
 

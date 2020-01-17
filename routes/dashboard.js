@@ -7,8 +7,9 @@ const router = express.Router();
 const categoriesRef = firebaseAdmin.ref('/categories/');
 const articlesRef = firebaseAdmin.ref('/articles/');
 
-/* GET dashboard/archives page. */
+/* GET dashboard/archives?status page. */
 router.get('/archives', (req, res) => {
+  const articleStatus = req.query.status || 'public';
   const categories = [];
   categoriesRef.once('value')
     .then((dataSnapshot) => {
@@ -20,13 +21,17 @@ router.get('/archives', (req, res) => {
     .then((dataSnapshot) => {
       const articles = [];
       dataSnapshot.forEach((dataSnapshotChild) => {
-        articles.push(dataSnapshotChild.val());
+        if (articleStatus === dataSnapshotChild.val().status) {
+          articles.push(dataSnapshotChild.val());
+        }
       });
+      articles.reverse();
       res.render('dashboard/archives', {
         title: 'Express',
         categories,
         articles,
         moment,
+        articleStatus,
       });
     })
     .catch((error) => {
